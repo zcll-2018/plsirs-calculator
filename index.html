@@ -2349,8 +2349,9 @@ document.addEventListener('click',event=>{const target=event.target.closest('[da
   else if(target.dataset.action==='closehelp'){if(event.target===target||target.classList.contains('close')){referenceOpen=null;fullFigureOpen=null;zoomOpen=false;render()}}
 });
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&referenceOpen){referenceOpen=null;fullFigureOpen=null;zoomOpen=false;render()}});
-document.addEventListener('input',event=>{const key=event.target.dataset.key;if(!key)return;state[key]=event.target.value;if(result){result=null;$('#result-anchor')?.remove()}if(key==='plainHU'||key==='enhancedHU'){const delta=$('#field-delta');if(delta)delta.value=valueOf('plainHU')!==''&&valueOf('enhancedHU')!==''?String(Number(state.enhancedHU)-Number(state.plainHU)):''}});
-document.addEventListener('change',event=>{const key=event.target.dataset.key;if(key==='density'||key==='mediaLong'||key==='lungLong'||key==='shape'||key==='margin'||key==='pattern'){state[key]=event.target.value;result=null;errors=[];render()}});
+function refreshSolidGtHalf(){const field=$('#field-solidGtHalf');if(!field)return;const lung=Number(valueOf('lungLong')),media=Number(valueOf('mediaLong'));field.value=Number.isFinite(lung)&&lung>0&&valueOf('mediaLong')!==''&&Number.isFinite(media)?(solidGtHalf()?c('yes'):c('no')):''}
+document.addEventListener('input',event=>{const key=event.target.dataset.key;if(!key)return;state[key]=event.target.value;if(result){result=null;$('#result-anchor')?.remove()}if(key==='plainHU'||key==='enhancedHU'){const delta=$('#field-delta');if(delta)delta.value=valueOf('plainHU')!==''&&valueOf('enhancedHU')!==''?String(Number(state.enhancedHU)-Number(state.plainHU)):''}if(key==='lungLong'||key==='mediaLong')refreshSolidGtHalf()});
+document.addEventListener('change',event=>{const key=event.target.dataset.key;if(key==='lungLong'||key==='mediaLong'){state[key]=event.target.value;if(result){result=null;$('#result-anchor')?.remove()}errors=[];$('.errorbox')?.remove();document.querySelectorAll('.field.error').forEach(field=>field.classList.remove('error'));refreshSolidGtHalf();return}if(key==='density'||key==='shape'||key==='margin'||key==='pattern'){state[key]=event.target.value;result=null;errors=[];render()}});
 render();
 
 </script>
